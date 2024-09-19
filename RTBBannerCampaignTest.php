@@ -139,7 +139,4 @@ class RTBBannerCampaignTest
     }
 }
 
-$test = new RTBBannerCampaignTest();
-$test->runTests();
-
 ?>
