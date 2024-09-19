@@ -114,7 +114,7 @@ class RTBBannerCampaignTest
         
         $rtb = new RTBBannerCampaign($bidRequestJson, $this->campaignsArray);
         $response = $rtb->handleBidRequest();
-        echo "Test Valid Bid Request: " . $response . "\n";
+        $rtb->log("info","Test Valid Bid Request: $response");
     }
 
     private function testInvalidBidRequest()
@@ -123,7 +123,7 @@ class RTBBannerCampaignTest
 
         $rtb = new RTBBannerCampaign($bidRequestJson, $this->campaignsArray);
         $response = $rtb->handleBidRequest();
-        echo "Test Invalid Bid Request: " . $response . "\n";
+        $rtb->log("error", "Test Valid Bid Request: $response");
     }
 
     private function testNoSuitableCampaign()
@@ -132,7 +132,7 @@ class RTBBannerCampaignTest
 
         $rtb = new RTBBannerCampaign($bidRequestJson, []);
         $response = $rtb->handleBidRequest();
-        echo "Test No Suitable Campaign: " . $response . "\n";
+        $rtb->log("warning", "Test Valid Bid Request: $response");
     }
 
     private function testCampaignSelection()
@@ -141,8 +141,6 @@ class RTBBannerCampaignTest
 
         $rtb = new RTBBannerCampaign($bidRequestJson, $this->campaignsArray);
         $response = $rtb->handleBidRequest();
-        echo "Test Campaign Selection: " . $response . "\n";
+        $rtb->log("info", "Test Valid Bid Request: $response");
     }
 }
-
-?>
