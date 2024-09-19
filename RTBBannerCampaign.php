@@ -11,7 +11,7 @@ class RTBBannerCampaign
         $this->campaigns = $campaignsArray;
     }
 
-    public function handleBidRequest(): bool|string
+    public function handleBidRequest(): string
     {
         if (!$this->validateBidRequest()) {
             return json_encode(['error' => 'Invalid bid request']);
@@ -26,17 +26,18 @@ class RTBBannerCampaign
         }
     }
 
-    private function validateBidRequest()
+    private function validateBidRequest(): bool
     {
         return isset($this->bidRequest['id'], $this->bidRequest['imp'], $this->bidRequest['device'], $this->bidRequest['app']);
     }
 
-    private function selectCampaign()
+    private function selectCampaign(): ?array
     {
         $bestCampaign = null;
         $highestBid = 0;
 
         foreach ($this->campaigns as $campaign) {
+
             if ($this->isCampaignEligible($campaign)) {
                 if ($campaign['price'] > $highestBid) {
                     $highestBid = $campaign['price'];
@@ -48,7 +49,7 @@ class RTBBannerCampaign
         return $bestCampaign;
     }
 
-    private function isCampaignEligible($campaign)
+    private function isCampaignEligible($campaign): bool
     {
         $device = $this->bidRequest['device'];
         $geo = $device['geo'];
@@ -79,7 +80,7 @@ class RTBBannerCampaign
         return true;
     }
 
-    private function generateResponse($campaign)
+    private function generateResponse($campaign): string
     {
         $response = [
             'id' => $this->bidRequest['id'],
@@ -104,7 +105,7 @@ class RTBBannerCampaign
                     ]
                 ]
             ],
-            'cur' => $this->bidRequest['cur'][0]
+            'cur' => $this->bidRequest['cur'][0] ?? 'USD'
         ];
 
         return json_encode($response);

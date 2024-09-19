@@ -3,6 +3,103 @@
 
 class RTBBannerCampaignTest
 {
+
+    private $campaignsArray = [
+        [
+            "campaignname" => "Test_Banner_13th-31st_march_Developer",
+            "advertiser" => "TestGP",
+            "code" => "118965F12BE33FB7E",
+            "appid" => "20240313103027",
+            "tld" => "https://adplaytechnology.com/",
+            "portalname" => "",
+            "creative_type" => "1",
+            "creative_id" => 167629,
+            "day_capping" => 0,
+            "dimension" => "320x480",
+            "attribute" => "rich-media",
+            "url" => "https://adplaytechnology.com/",
+            "billing_id" => "123456789",
+            "price" => 0.1,
+            "bidtype" => "CPM",
+            "image_url" => "https://image.png",
+            "htmltag" => "",
+            "from_hour" => "0",
+            "to_hour" => "23",
+            "hs_os" => "Android,iOS,Desktop",
+            "operator" => "Banglalink,GrameenPhone,Robi,Teletalk,Airtel,Wi-Fi",
+            "device_make" => "No Filter",
+            "country" => "Bangladesh",
+            "city" => "",
+            "lat" => "",
+            "lng" => "",
+            "app_name" => null,
+            "user_list_id" => "0",
+            "adplay_logo" => 1,
+            "vast_video_duration" => null,
+            "logo_placement" => 1,
+            "hs_model" => null,
+            "is_rewarded_inventory" => 0,
+            "pixel_tag" => null,
+            "dmp_campaign_audience" => 0,
+            "platform" => null,
+            "open_publisher" => 1,
+            "audience_targeting" => 0,
+            "native_title" => null,
+            "native_type" => null,
+            "native_data_value" => null,
+            "native_data_cta" => null,
+            "native_data_rating" => null,
+            "native_data_price" => null,
+            "native_img_icon" => null
+        ],
+        [
+            "campaignname" => "Test_Banner_13th-31st_march_Developer",
+            "advertiser" => "TestGP",
+            "code" => "118965F12BE33FB7E",
+            "appid" => "20240313103027",
+            "tld" => "https://adplaytechnology.com/",
+            "portalname" => "",
+            "creative_type" => "1",
+            "creative_id" => 167629,
+            "day_capping" => 0,
+            "dimension" => "320x50",
+            "attribute" => "rich-media",
+            "url" => "https://adplaytechnology.com/",
+            "billing_id" => "123456789",
+            "price" => 0.1,
+            "bidtype" => "CPM",
+            "image_url" => "https://image.png",
+            "htmltag" => "",
+            "from_hour" => "0",
+            "to_hour" => "23",
+            "hs_os" => "Android,iOS,Desktop",
+            "operator" => "Banglalink,GrameenPhone,Robi,Teletalk,Airtel,Wi-Fi",
+            "device_make" => "No Filter","country" => "Bangladesh",
+            "city" => "",
+            "lat" => "",
+            "lng" => "",
+            "app_name" => null,
+            "user_list_id" => "0",
+            "adplay_logo" => 1,
+            "vast_video_duration" => null,
+            "logo_placement" => 1,
+            "hs_model" => null,
+            "is_rewarded_inventory" => 0,
+            "pixel_tag" => null,
+            "dmp_campaign_audience" => 0,
+            "platform" => null,
+            "open_publisher" => 1,
+            "audience_targeting" => 0,
+            "native_title" => null,
+            "native_type" => null,
+            "native_data_value" => null,
+            "native_data_cta" => null,
+            "native_data_rating" => null,
+            "native_data_price" => null,
+            "native_img_icon" => null
+        ],
+    ];
+
     public function runTests()
     {
         $this->testValidBidRequest();
@@ -13,127 +110,36 @@ class RTBBannerCampaignTest
 
     private function testValidBidRequest()
     {
-        $bidRequestJson = json_encode([
-            'id' => '1',
-            'imp' => [['id' => '1', 'bidfloor' => 0.5, 'banner' => ['w' => 300, 'h' => 250]]],
-            'device' => ['os' => 'iOS', 'geo' => ['country' => 'USA']],
-            'app' => ['id' => 'app1'],
-            'cur' => ['USD']
-        ]);
-
-        $campaignsArray = [
-            [
-                'price' => 1.0,
-                'hs_os' => 'iOS',
-                'country' => 'USA',
-                'dimension' => '300x250',
-                'code' => 'ad1',
-                'htmltag' => '<div>Ad</div>',
-                'creative_id' => 'creative1',
-                'tld' => 'example.com',
-                'image_url' => 'http://example.com/ad.jpg',
-                'appid' => 'app1',
-                'attribute' => 'attr1',
-                'billing_id' => 'deal1'
-            ]
-        ];
-
-        $rtb = new RTBBannerCampaign($bidRequestJson, $campaignsArray);
+        $bidRequestJson = file_get_contents('bid_request.json');
+        
+        $rtb = new RTBBannerCampaign($bidRequestJson, $this->campaignsArray);
         $response = $rtb->handleBidRequest();
         echo "Test Valid Bid Request: " . $response . "\n";
     }
 
     private function testInvalidBidRequest()
     {
-        $bidRequestJson = json_encode([
-            'id' => '1',
-            'imp' => [['id' => '1', 'bidfloor' => 0.5, 'banner' => ['w' => 300, 'h' => 250]]],
-            'device' => ['os' => 'iOS'],
-            'app' => ['id' => 'app1'],
-            'cur' => ['USD']
-        ]);
+        $bidRequestJson = file_get_contents('invalid_bid_request.json');
 
-        $campaignsArray = [];
-
-        $rtb = new RTBBannerCampaign($bidRequestJson, $campaignsArray);
+        $rtb = new RTBBannerCampaign($bidRequestJson, $this->campaignsArray);
         $response = $rtb->handleBidRequest();
         echo "Test Invalid Bid Request: " . $response . "\n";
     }
 
     private function testNoSuitableCampaign()
     {
-        $bidRequestJson = json_encode([
-            'id' => '1',
-            'imp' => [['id' => '1', 'bidfloor' => 0.5, 'banner' => ['w' => 300, 'h' => 250]]],
-            'device' => ['os' => 'iOS', 'geo' => ['country' => 'USA']],
-            'app' => ['id' => 'app1'],
-            'cur' => ['USD']
-        ]);
+        $bidRequestJson = file_get_contents('bid_request.json');
 
-        $campaignsArray = [
-            [
-                'price' => 0.4,
-                'hs_os' => 'iOS',
-                'country' => 'USA',
-                'dimension' => '300x250',
-                'code' => 'ad1',
-                'htmltag' => '<div>Ad</div>',
-                'creative_id' => 'creative1',
-                'tld' => 'example.com',
-                'image_url' => 'http://example.com/ad.jpg',
-                'appid' => 'app1',
-                'attribute' => 'attr1',
-                'billing_id' => 'deal1'
-            ]
-        ];
-
-        $rtb = new RTBBannerCampaign($bidRequestJson, $campaignsArray);
+        $rtb = new RTBBannerCampaign($bidRequestJson, []);
         $response = $rtb->handleBidRequest();
         echo "Test No Suitable Campaign: " . $response . "\n";
     }
 
     private function testCampaignSelection()
     {
-        $bidRequestJson = json_encode([
-            'id' => '1',
-            'imp' => [['id' => '1', 'bidfloor' => 0.5, 'banner' => ['w' => 300, 'h' => 250]]],
-            'device' => ['os' => 'iOS', 'geo' => ['country' => 'USA']],
-            'app' => ['id' => 'app1'],
-            'cur' => ['USD']
-        ]);
+        $bidRequestJson = file_get_contents('bid_request.json');
 
-        $campaignsArray = [
-            [
-                'price' => 0.6,
-                'hs_os' => 'iOS',
-                'country' => 'USA',
-                'dimension' => '300x250',
-                'code' => 'ad1',
-                'htmltag' => '<div>Ad</div>',
-                'creative_id' => 'creative1',
-                'tld' => 'example.com',
-                'image_url' => 'http://example.com/ad.jpg',
-                'appid' => 'app1',
-                'attribute' => 'attr1',
-                'billing_id' => 'deal1'
-            ],
-            [
-                'price' => 1.0,
-                'hs_os' => 'iOS',
-                'country' => 'USA',
-                'dimension' => '300x250',
-                'code' => 'ad2',
-                'htmltag' => '<div>Ad2</div>',
-                'creative_id' => 'creative2',
-                'tld' => 'example2.com',
-                'image_url' => 'http://example2.com/ad2.jpg',
-                'appid' => 'app2',
-                'attribute' => 'attr2',
-                'billing_id' => 'deal2'
-            ]
-        ];
-
-        $rtb = new RTBBannerCampaign($bidRequestJson, $campaignsArray);
+        $rtb = new RTBBannerCampaign($bidRequestJson, $this->campaignsArray);
         $response = $rtb->handleBidRequest();
         echo "Test Campaign Selection: " . $response . "\n";
     }
